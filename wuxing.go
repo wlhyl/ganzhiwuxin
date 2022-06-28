@@ -1,45 +1,51 @@
 package ganzhiwuxin
 
+import "fmt"
+
 var wuXinNumToName = [...]string{"木", "火", "土", "金", "水"}
 
-type WuXin struct {
+type WuXing struct {
 	name string
 	num  int
 }
 
-func (w *WuXin) Init(n interface{}) bool {
+func NewWuXing(name string) (WuXing, error) {
+	var w WuXing
 	for index, value := range wuXinNumToName {
-		switch n := n.(type) {
-		case int:
-			if n == index+1 {
-				w.name = value
-				w.num = index + 1
-				return true
-			}
-		case string:
-			if n == value {
-				w.name = value
-				w.num = index + 1
-				return true
-			}
-		}
 
+		if name == value {
+			w.name = value
+			w.num = index + 1
+			return w, nil
+		}
 	}
-	return false
+	return w, fmt.Errorf("没有此五行：%s", name)
 }
 
-func (w WuXin) GetName() string {
+/**
+得到五行的名字
+*/
+func (w WuXing) Name() string {
 	return w.name
 }
 
-func (w WuXin) Sheng(w2 WuXin) bool {
+/**
+相同判断
+*/
+func (w WuXing) Equals(other WuXing) bool {
+	return w.num == other.num
+}
+
+// 生
+func (w WuXing) Sheng(w2 WuXing) bool {
 	return (w.num-w2.num-4)%5 == 0
 }
 
-func (w WuXin) Ke(w2 WuXin) bool {
+// 克
+func (w WuXing) Ke(w2 WuXing) bool {
 	return (w.num-w2.num-3)%5 == 0
 }
 
-func (w WuXin) String() string {
-	return w.name
-}
+// func (w WuXin) String() string {
+// 	return w.name
+// }

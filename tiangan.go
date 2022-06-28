@@ -1,145 +1,105 @@
 package ganzhiwuxin
 
-type GanZhi interface {
-	GetName() string
-	GetNum() int
-	Is阳() bool
-	GetWuXin() WuXin
-	Sheng(t2 GanZhi) bool
-	Ke(t2 GanZhi) bool
-	Eq(t2 GanZhi) bool //干与干、支与支是否相等
-	//Add(n int) GanZhi  将干或支前移n位
-	//Sub(n GanZhi) int  两干或两支相隔多少位
-}
-
-func New(s string, n interface{}) (interface{}, bool) {
-	switch s {
-	case "WuXin":
-		var w WuXin
-		if w.Init(n) {
-			return w, true
-		}
-	case "TianGan":
-		var t TianGan
-		if t.Init(n) {
-			return t, true
-		}
-	case "DiZhi":
-		var d DiZhi
-		if d.Init(n) {
-			return d, true
-		}
-	}
-	return nil, false
-}
+import (
+	"fmt"
+)
 
 var tianGanNumToName = [...]string{"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
 
 type TianGan struct {
-	name  string
-	num   int
-	wuXin WuXin
+	name   string
+	num    int
+	wuXing WuXing
+	//  阳
+	masculine bool
+	// 太玄数
+	taiXuan int
 }
 
-func (t *TianGan) Init(n interface{}) bool {
+func NewTianGan(name string) (TianGan, error) {
+	var t TianGan
 	for index, value := range tianGanNumToName {
-		switch n := n.(type) {
-		case int:
-			if n == index+1 {
-				t.name = value
-				t.num = index + 1
-				var w WuXin
-				w.Init((index + 2) / 2)
-				t.wuXin = w
-				return true
-			}
-		case string:
-			if n == value {
-				t.name = value
-				t.num = index + 1
-				var w WuXin
-				w.Init((index + 2) / 2)
-				t.wuXin = w
-				return true
-			}
-		}
+		if name == value {
+			t.name = value
+			t.num = index + 1
 
+			t.wuXing.num = (t.num + 1) / 2
+			t.wuXing.name = wuXinNumToName[t.wuXing.num-1]
+
+			t.masculine = t.num%2 != 0
+
+			if t.num <= 5 {
+				t.taiXuan = 10 - t.num
+			} else {
+				t.taiXuan = 15 - t.num
+			}
+
+			return t, nil
+		}
 	}
-	return false
+
+	return t, fmt.Errorf("没有此天干：%s", name)
 
 }
 
-func (t TianGan) GetName() string {
+func (t TianGan) Name() string {
 	return t.name
 }
 
-func (t TianGan) GetNum() int {
-	return t.num
-}
-
-func (t TianGan) Is阳() bool {
-	return t.num%2 != 0
+// 阴阳
+func (t TianGan) Masculine() bool {
+	return t.masculine
 }
 
 //返回干的五行
-func (t TianGan) GetWuXin() WuXin {
-	return t.wuXin
+func (t TianGan) WuXing() WuXing {
+	return t.wuXing
 }
 
-//干生干、支
-func (t TianGan) Sheng(t2 GanZhi) bool {
-
-	return t.wuXin.Sheng(t2.GetWuXin())
-
+// 太玄数
+func (t TianGan) TaiXuan() int {
+	return t.taiXuan
 }
 
-//干与干、支相克
-func (t TianGan) Ke(t2 GanZhi) bool {
-	return t.wuXin.Ke(t2.GetWuXin())
+// 相等
+func (t TianGan) Equals(other TianGan) bool {
+	return t.num == other.num
 }
 
-func (t TianGan) Eq(t2 GanZhi) bool {
-	switch t2 := t2.(type) {
-	case TianGan:
-		return t.num == t2.num
-	default:
-		return false
+// 天干向前数n个
+func (t TianGan) Plus(other int) TianGan {
+	var tmp = other
+	for tmp < 0 {
+		tmp += 10
 	}
-}
-
-func (t TianGan) Add(n int) TianGan {
-	var t1 TianGan
-	tmp := (t.num + n + 10) % 10
+	tmp = (t.num + tmp + 10) % 10
 	if tmp == 0 {
 		tmp = 10
 	}
-	t1.Init(tmp)
+	t1, _ := NewTianGan(tianGanNumToName[tmp-1])
 	return t1
 }
 
-func (t TianGan) Sub(n TianGan) int {
-	return t.num - n.num
+// 两天干相差几位
+func (t TianGan) Minus(other TianGan) int {
+	// 返回值为整数
+	return (t.num - other.num + 10) % 10
 }
 
-//天干五合
-func (t TianGan) Is五合(t2 TianGan) bool {
-	if t.Eq(t2) {
+//  克
+func (t TianGan) Ke(other TianGan) bool {
+	return t.wuXing.Ke(other.wuXing)
+}
+
+//  生
+func (t TianGan) Sheng(other TianGan) bool {
+	return t.wuXing.Sheng(other.wuXing)
+}
+
+// 五合
+func (t TianGan) WuHe(other TianGan) bool {
+	if t.num == other.num {
 		return false
 	}
-	return (t.num-t2.num)%5 == 0
-}
-
-func (t TianGan) Get五合() (t1 TianGan) {
-	for i := 1; i < 11; i++ {
-		var b TianGan
-		b.Init(i)
-		if t.Is五合(b) {
-			return b
-		}
-	}
-	return
-}
-
-func (t TianGan) String() string {
-	return t.name
+	return (t.num-other.num)%5 == 0
 }
