@@ -92,6 +92,12 @@ impl PartialEq for TianGan {
     }
 }
 
+impl Default for TianGan {
+    fn default() -> Self {
+        Self::new("甲").unwrap()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::wuxing::WuXing;
@@ -276,5 +282,12 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[test]
+    fn test_default() {
+        let g = TianGan::default();
+        let jia = TianGan::new("甲").unwrap();
+        assert_eq!(g, jia);
     }
 }

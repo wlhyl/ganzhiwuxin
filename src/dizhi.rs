@@ -155,6 +155,12 @@ impl PartialEq for DiZhi {
     }
 }
 
+impl Default for DiZhi {
+    fn default() -> Self {
+        Self::new("子").unwrap()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::wuxing::WuXing;
@@ -410,5 +416,12 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[test]
+    fn test_default() {
+        let d: DiZhi = Default::default();
+        let zi = DiZhi::new("子").unwrap();
+        assert_eq!(d, zi);
     }
 }

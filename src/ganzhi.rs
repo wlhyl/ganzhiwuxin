@@ -93,6 +93,12 @@ impl PartialEq for GanZhi {
     }
 }
 
+impl Default for GanZhi {
+    fn default() -> Self {
+        Self::new(Default::default(), Default::default()).unwrap()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
@@ -327,5 +333,13 @@ mod tests {
                 assert_eq!(j, gz1.minus(&gz0) as usize, "{} - {} = {}", gz1, gz0, j);
             }
         }
+    }
+    #[test]
+    fn test_default() {
+        let default: GanZhi = Default::default();
+        let g = TianGan::new("甲").unwrap();
+        let z = DiZhi::new("子").unwrap();
+        let gz = GanZhi::new(g, z).unwrap();
+        assert_eq!(default, gz);
     }
 }
