@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{fmt::Display, hash::Hash};
 
 use crate::wuxing::{WuXing, WU_XING_NUM_TO_NAME};
 
@@ -158,6 +158,12 @@ impl PartialEq for DiZhi {
 impl Default for DiZhi {
     fn default() -> Self {
         Self::new("子").unwrap()
+    }
+}
+
+impl Hash for DiZhi {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.num.hash(state);
     }
 }
 
