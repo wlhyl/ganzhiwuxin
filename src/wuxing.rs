@@ -1,94 +1,87 @@
 use std::fmt::Display;
 
-pub(crate) const WU_XING_NUM_TO_NAME: [&str; 5] = ["木", "火", "土", "金", "水"];
-
-#[derive(Debug, Eq, Clone)]
-pub struct WuXing {
-    pub name: String,
-    pub(crate) num: u8,
+#[derive(Debug, PartialEq, Eq, Clone)]
+pub enum WuXing {
+    木,
+    火,
+    土,
+    金,
+    水,
 }
 
 impl WuXing {
-    pub fn new(name: &str) -> Result<WuXing, String> {
-        if let Some(num) = WU_XING_NUM_TO_NAME.iter().position(|&s| s == name) {
-            Ok(WuXing {
-                name: name.to_string(),
-                num: num as u8 + 1,
-            })
-        } else {
-            Err(format!("没有此五行：{}", name))
+    fn num(&self) -> u8 {
+        match self {
+            WuXing::木 => 1,
+            WuXing::火 => 2,
+            WuXing::土 => 3,
+            WuXing::金 => 4,
+            WuXing::水 => 5,
         }
     }
-
     /// 生
     pub fn sheng(&self, w2: &WuXing) -> bool {
-        return (self.num as i16 - w2.num as i16 - 4) % 5 == 0;
+        return (self.num() as i16 - w2.num() as i16 - 4) % 5 == 0;
     }
 
     /// 克
     pub fn ke(&self, w2: &WuXing) -> bool {
-        return (self.num as i16 - w2.num as i16 - 3) % 5 == 0;
+        return (self.num() as i16 - w2.num() as i16 - 3) % 5 == 0;
     }
 }
 
 impl Display for WuXing {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.name)
-    }
-}
-
-impl PartialEq for WuXing {
-    fn eq(&self, other: &Self) -> bool {
-        self.name == other.name && self.num == other.num
+        match self {
+            WuXing::木 => write!(f, "{}", "木"),
+            WuXing::火 => write!(f, "{}", "火"),
+            WuXing::土 => write!(f, "{}", "土"),
+            WuXing::金 => write!(f, "{}", "金"),
+            WuXing::水 => write!(f, "{}", "水"),
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use super::WuXing;
 
-    use super::{WuXing, WU_XING_NUM_TO_NAME};
-    const WU_XING_NAME: [&str; 5] = ["木", "火", "土", "金", "水"];
+    const WU_XING: [WuXing; 5] = [WuXing::木, WuXing::火, WuXing::土, WuXing::金, WuXing::水];
+
     #[test]
-
-    fn test_new() {
-        for (index, &value) in WU_XING_NUM_TO_NAME.iter().enumerate() {
-            let wu_xing = WuXing::new(value);
-
-            assert!(wu_xing.is_ok());
-            let wu_xing = wu_xing.unwrap();
-            assert_eq!(wu_xing.name, value);
-            assert_eq!(wu_xing.num, index as u8 + 1);
-        }
-
-        let wu_xing = WuXing::new("否");
-        assert!(wu_xing.is_err());
+    fn test_num() {
+        assert_eq!(WuXing::木.num(), 1);
+        assert_eq!(WuXing::火.num(), 2);
+        assert_eq!(WuXing::土.num(), 3);
+        assert_eq!(WuXing::金.num(), 4);
+        assert_eq!(WuXing::水.num(), 5);
     }
+
     #[test]
     fn test_display() {
-        for value in WU_XING_NUM_TO_NAME {
-            let w = WuXing::new(value).unwrap();
-            let w = format!("{}", w);
-            assert_eq!(value, w);
-        }
+        assert_eq!(format!("{}", WuXing::木), "木");
+        assert_eq!(format!("{}", WuXing::火), "火");
+        assert_eq!(format!("{}", WuXing::土), "土");
+        assert_eq!(format!("{}", WuXing::金), "金");
+        assert_eq!(format!("{}", WuXing::水), "水");
     }
     #[test]
     fn test_wu_xing_equals() {
-        for name in WU_XING_NAME {
-            let w0 = WuXing::new(name).unwrap();
-            let w1 = WuXing::new(name).unwrap();
-            assert_eq!(w0, w1);
-            assert_eq!(w1, w0);
-        }
+        assert_eq!(WuXing::木, WuXing::木);
+        assert_eq!(WuXing::火, WuXing::火);
+        assert_eq!(WuXing::土, WuXing::土);
+        assert_eq!(WuXing::金, WuXing::金);
+        assert_eq!(WuXing::水, WuXing::水);
     }
 
     #[test]
     fn test_wu_xing_not_equals() {
-        for i in 0..WU_XING_NAME.len() {
-            let w0 = WuXing::new(WU_XING_NAME[i]).unwrap();
+        for i in 0..WU_XING.len() {
+            let w0 = WU_XING[i].clone();
 
-            for j in 1..WU_XING_NAME.len() - 1 {
-                let n = (i + j) % WU_XING_NAME.len();
-                let w1 = WuXing::new(WU_XING_NAME[n]).unwrap();
+            for j in 1..WU_XING.len() - 1 {
+                let n = (i + j) % WU_XING.len();
+                let w1 = WU_XING[n].clone();
 
                 assert_ne!(w0, w1);
                 assert_ne!(w1, w0);
@@ -99,10 +92,10 @@ mod tests {
     // 五行相生
     #[test]
     fn test_wu_xing_sheng() {
-        for (i, _) in WU_XING_NAME.iter().enumerate() {
-            let n = (i + 1) % WU_XING_NAME.len();
-            let w0 = WuXing::new(WU_XING_NAME[i]).unwrap();
-            let w1 = WuXing::new(WU_XING_NAME[n]).unwrap();
+        for (i, _) in WU_XING.iter().enumerate() {
+            let n = (i + 1) % WU_XING.len();
+            let w0 = WU_XING[i].clone();
+            let w1 = WU_XING[n].clone();
 
             assert!(w0.sheng(&w1));
         }
@@ -111,10 +104,10 @@ mod tests {
     // 五行相克
     #[test]
     fn test_wu_xing_ke() {
-        for (i, _) in WU_XING_NAME.iter().enumerate() {
-            let n = (i + 2) % WU_XING_NAME.len();
-            let w0 = WuXing::new(WU_XING_NAME[i]).unwrap();
-            let w1 = WuXing::new(WU_XING_NAME[n]).unwrap();
+        for (i, _) in WU_XING.iter().enumerate() {
+            let n = (i + 2) % WU_XING.len();
+            let w0 = WU_XING[i].clone();
+            let w1 = WU_XING[n].clone();
 
             assert!(w0.ke(&w1));
         }
@@ -122,16 +115,16 @@ mod tests {
 
     #[test]
     fn test_wu_xing_not_sheng() {
-        for (i, _) in WU_XING_NAME.iter().enumerate() {
-            let n0 = (i + 2) % WU_XING_NAME.len();
-            let n1 = (i + 3) % WU_XING_NAME.len();
-            let n2 = (i + 4) % WU_XING_NAME.len();
+        for (i, _) in WU_XING.iter().enumerate() {
+            let n0 = (i + 2) % WU_XING.len();
+            let n1 = (i + 3) % WU_XING.len();
+            let n2 = (i + 4) % WU_XING.len();
 
-            let g0 = WuXing::new(WU_XING_NAME[i]).unwrap();
+            let g0 = WU_XING[i].clone();
 
-            let g1 = WuXing::new(WU_XING_NAME[n0]).unwrap();
-            let g2 = WuXing::new(WU_XING_NAME[n1]).unwrap();
-            let g3 = WuXing::new(WU_XING_NAME[n2]).unwrap();
+            let g1 = WU_XING[n0].clone();
+            let g2 = WU_XING[n1].clone();
+            let g3 = WU_XING[n2].clone();
 
             assert!(!g0.sheng(&g1));
             assert!(!g0.sheng(&g2));
@@ -145,15 +138,15 @@ mod tests {
     //五行不相克
     #[test]
     fn test_wu_xing_not_ke() {
-        for (i, _) in WU_XING_NAME.iter().enumerate() {
-            let n0 = (i + 1) % WU_XING_NAME.len();
-            let n1 = (i + 3) % WU_XING_NAME.len();
-            let n2 = (i + 4) % WU_XING_NAME.len();
+        for (i, _) in WU_XING.iter().enumerate() {
+            let n0 = (i + 1) % WU_XING.len();
+            let n1 = (i + 3) % WU_XING.len();
+            let n2 = (i + 4) % WU_XING.len();
 
-            let g0 = WuXing::new(WU_XING_NAME[i]).unwrap();
-            let g1 = WuXing::new(WU_XING_NAME[n0]).unwrap();
-            let g2 = WuXing::new(WU_XING_NAME[n1]).unwrap();
-            let g3 = WuXing::new(WU_XING_NAME[n2]).unwrap();
+            let g0 = WU_XING[i].clone();
+            let g1 = WU_XING[n0].clone();
+            let g2 = WU_XING[n1].clone();
+            let g3 = WU_XING[n2].clone();
 
             assert!(!g0.ke(&g1));
             assert!(!g0.ke(&g2));
