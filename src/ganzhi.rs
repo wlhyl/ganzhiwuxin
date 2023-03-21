@@ -68,6 +68,71 @@ pub enum GanZhi {
 }
 
 impl GanZhi {
+    pub fn new(g: &TianGan, z: &DiZhi) -> Result<GanZhi, String> {
+        match (g, z) {
+            (TianGan::甲, DiZhi::子) => Ok(GanZhi::甲子),
+            (TianGan::乙, DiZhi::丑) => Ok(GanZhi::乙丑),
+            (TianGan::丙, DiZhi::寅) => Ok(GanZhi::丙寅),
+            (TianGan::丁, DiZhi::卯) => Ok(GanZhi::丁卯),
+            (TianGan::戊, DiZhi::辰) => Ok(GanZhi::戊辰),
+            (TianGan::己, DiZhi::巳) => Ok(GanZhi::己巳),
+            (TianGan::庚, DiZhi::午) => Ok(GanZhi::庚午),
+            (TianGan::辛, DiZhi::未) => Ok(GanZhi::辛未),
+            (TianGan::壬, DiZhi::申) => Ok(GanZhi::壬申),
+            (TianGan::癸, DiZhi::酉) => Ok(GanZhi::癸酉),
+            (TianGan::甲, DiZhi::戌) => Ok(GanZhi::甲戌),
+            (TianGan::乙, DiZhi::亥) => Ok(GanZhi::乙亥),
+            (TianGan::丙, DiZhi::子) => Ok(GanZhi::丙子),
+            (TianGan::丁, DiZhi::丑) => Ok(GanZhi::丁丑),
+            (TianGan::戊, DiZhi::寅) => Ok(GanZhi::戊寅),
+            (TianGan::己, DiZhi::卯) => Ok(GanZhi::己卯),
+            (TianGan::庚, DiZhi::辰) => Ok(GanZhi::庚辰),
+            (TianGan::辛, DiZhi::巳) => Ok(GanZhi::辛巳),
+            (TianGan::壬, DiZhi::午) => Ok(GanZhi::壬午),
+            (TianGan::癸, DiZhi::未) => Ok(GanZhi::癸未),
+            (TianGan::甲, DiZhi::申) => Ok(GanZhi::甲申),
+            (TianGan::乙, DiZhi::酉) => Ok(GanZhi::乙酉),
+            (TianGan::丙, DiZhi::戌) => Ok(GanZhi::丙戌),
+            (TianGan::丁, DiZhi::亥) => Ok(GanZhi::丁亥),
+            (TianGan::戊, DiZhi::子) => Ok(GanZhi::戊子),
+            (TianGan::己, DiZhi::丑) => Ok(GanZhi::己丑),
+            (TianGan::庚, DiZhi::寅) => Ok(GanZhi::庚寅),
+            (TianGan::辛, DiZhi::卯) => Ok(GanZhi::辛卯),
+            (TianGan::壬, DiZhi::辰) => Ok(GanZhi::壬辰),
+            (TianGan::癸, DiZhi::巳) => Ok(GanZhi::癸巳),
+            (TianGan::甲, DiZhi::午) => Ok(GanZhi::甲午),
+            (TianGan::乙, DiZhi::未) => Ok(GanZhi::乙未),
+            (TianGan::丙, DiZhi::申) => Ok(GanZhi::丙申),
+            (TianGan::丁, DiZhi::酉) => Ok(GanZhi::丁酉),
+            (TianGan::戊, DiZhi::戌) => Ok(GanZhi::戊戌),
+            (TianGan::己, DiZhi::亥) => Ok(GanZhi::己亥),
+            (TianGan::庚, DiZhi::子) => Ok(GanZhi::庚子),
+            (TianGan::辛, DiZhi::丑) => Ok(GanZhi::辛丑),
+            (TianGan::壬, DiZhi::寅) => Ok(GanZhi::壬寅),
+            (TianGan::癸, DiZhi::卯) => Ok(GanZhi::癸卯),
+            (TianGan::甲, DiZhi::辰) => Ok(GanZhi::甲辰),
+            (TianGan::乙, DiZhi::巳) => Ok(GanZhi::乙巳),
+            (TianGan::丙, DiZhi::午) => Ok(GanZhi::丙午),
+            (TianGan::丁, DiZhi::未) => Ok(GanZhi::丁未),
+            (TianGan::戊, DiZhi::申) => Ok(GanZhi::戊申),
+            (TianGan::己, DiZhi::酉) => Ok(GanZhi::己酉),
+            (TianGan::庚, DiZhi::戌) => Ok(GanZhi::庚戌),
+            (TianGan::辛, DiZhi::亥) => Ok(GanZhi::辛亥),
+            (TianGan::壬, DiZhi::子) => Ok(GanZhi::壬子),
+            (TianGan::癸, DiZhi::丑) => Ok(GanZhi::癸丑),
+            (TianGan::甲, DiZhi::寅) => Ok(GanZhi::甲寅),
+            (TianGan::乙, DiZhi::卯) => Ok(GanZhi::乙卯),
+            (TianGan::丙, DiZhi::辰) => Ok(GanZhi::丙辰),
+            (TianGan::丁, DiZhi::巳) => Ok(GanZhi::丁巳),
+            (TianGan::戊, DiZhi::午) => Ok(GanZhi::戊午),
+            (TianGan::己, DiZhi::未) => Ok(GanZhi::己未),
+            (TianGan::庚, DiZhi::申) => Ok(GanZhi::庚申),
+            (TianGan::辛, DiZhi::酉) => Ok(GanZhi::辛酉),
+            (TianGan::壬, DiZhi::戌) => Ok(GanZhi::壬戌),
+            (TianGan::癸, DiZhi::亥) => Ok(GanZhi::癸亥),
+            _ => Err(format!("{}{}不能组成干支！", g, z)),
+        }
+    }
     pub fn gan(&self) -> TianGan {
         match self {
             GanZhi::甲子
@@ -381,6 +446,51 @@ mod tests {
         GanZhi::壬戌,
         GanZhi::癸亥,
     ];
+
+    #[test]
+    fn test_new() {
+        let gan = [
+            TianGan::甲,
+            TianGan::乙,
+            TianGan::丙,
+            TianGan::丁,
+            TianGan::戊,
+            TianGan::己,
+            TianGan::庚,
+            TianGan::辛,
+            TianGan::壬,
+            TianGan::癸,
+        ];
+
+        let zhi = [
+            DiZhi::子,
+            DiZhi::丑,
+            DiZhi::寅,
+            DiZhi::卯,
+            DiZhi::辰,
+            DiZhi::巳,
+            DiZhi::午,
+            DiZhi::未,
+            DiZhi::申,
+            DiZhi::酉,
+            DiZhi::戌,
+            DiZhi::亥,
+        ];
+
+        for g in gan {
+            for z in &zhi {
+                let gz = GanZhi::new(&g, z);
+                if g.masculine() == z.masculine() {
+                    assert!(gz.is_ok());
+                    let gz = gz.unwrap();
+                    assert_eq!(g, gz.gan());
+                    assert_eq!(*z, gz.zhi());
+                } else {
+                    assert!(gz.is_err());
+                }
+            }
+        }
+    }
 
     #[test]
     fn test_gan() {
