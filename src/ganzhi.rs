@@ -2,6 +2,10 @@ use std::fmt::Display;
 
 use crate::{dizhi::DiZhi, tiangan::TianGan, wuxing::WuXing};
 
+#[cfg(feature = "serde")]
+use serde::Serialize;
+
+#[cfg_attr(feature = "serde", derive(Serialize))]
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub enum GanZhi {
     #[default]

@@ -1,8 +1,12 @@
 use std::fmt::Display;
 
+#[cfg(feature = "serde")]
+use serde::Serialize;
+
 use crate::wuxing::WuXing;
 
-#[derive(Debug, Eq, PartialEq, Clone, Default, Hash)]
+#[derive(Debug, Eq, PartialEq, Clone, Default, Hash, Copy)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub enum DiZhi {
     #[default]
     子,
