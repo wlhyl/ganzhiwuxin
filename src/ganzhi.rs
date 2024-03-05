@@ -6,7 +6,7 @@ use crate::{dizhi::DiZhi, tiangan::TianGan, wuxing::WuXing};
 use serde::Serialize;
 
 #[cfg_attr(feature = "serde", derive(Serialize))]
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, Copy)]
 pub enum GanZhi {
     #[default]
     甲子,

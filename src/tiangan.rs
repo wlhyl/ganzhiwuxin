@@ -6,7 +6,7 @@ use crate::wuxing::WuXing;
 use serde::Serialize;
 
 #[cfg_attr(feature = "serde", derive(Serialize))]
-#[derive(Debug, PartialEq, Eq, Clone, Default)]
+#[derive(Debug, PartialEq, Eq, Clone, Default, Copy)]
 pub enum TianGan {
     #[default]
     甲,

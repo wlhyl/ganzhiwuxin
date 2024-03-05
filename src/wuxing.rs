@@ -4,7 +4,7 @@ use std::fmt::Display;
 use serde::Serialize;
 
 #[cfg_attr(feature = "serde", derive(Serialize))]
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum WuXing {
     木,
     火,
