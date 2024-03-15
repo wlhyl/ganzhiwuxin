@@ -7,9 +7,11 @@ edition = "2021"
 
 [features]
 serde = ["dep:serde"]
+swagger = ["dep:utoipa"]
 
 [dependencies]
 serde = { version = "*", features = ["derive"], optional = true}
+utoipa = { version = "*", optional = true }
 
 #[dev-dependencies]
 #serial_test = "1.0.0"

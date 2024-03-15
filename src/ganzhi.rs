@@ -5,7 +5,11 @@ use crate::{dizhi::DiZhi, tiangan::TianGan, wuxing::WuXing};
 #[cfg(feature = "serde")]
 use serde::Serialize;
 
+#[cfg(feature = "swagger")]
+use utoipa::ToSchema;
+
 #[cfg_attr(feature = "serde", derive(Serialize))]
+#[cfg_attr(feature = "swagger", derive(ToSchema))]
 #[derive(Clone, Debug, Default, Eq, PartialEq, Copy)]
 pub enum GanZhi {
     #[default]

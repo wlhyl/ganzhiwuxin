@@ -5,6 +5,10 @@ use crate::wuxing::WuXing;
 #[cfg(feature = "serde")]
 use serde::Serialize;
 
+#[cfg(feature = "swagger")]
+use utoipa::ToSchema;
+
+#[cfg_attr(feature = "swagger", derive(ToSchema))]
 #[cfg_attr(feature = "serde", derive(Serialize))]
 #[derive(Debug, PartialEq, Eq, Clone, Default, Copy)]
 pub enum TianGan {

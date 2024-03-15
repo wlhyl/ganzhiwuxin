@@ -5,8 +5,12 @@ use serde::Serialize;
 
 use crate::wuxing::WuXing;
 
-#[derive(Debug, Eq, PartialEq, Clone, Default, Hash, Copy)]
+#[cfg(feature = "swagger")]
+use utoipa::ToSchema;
+
+#[derive(Debug, Eq, PartialEq, Clone, Default, Copy)]
 #[cfg_attr(feature = "serde", derive(Serialize))]
+#[cfg_attr(feature = "swagger", derive(ToSchema))]
 pub enum DiZhi {
     #[default]
     子,
